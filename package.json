@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "检查页面效果与设计稿是否相符合",
   "main": "lib/index.js",
+  "bin" : { 
+    "pxlint" : "bin/cli.js"
+  },
   "scripts": {
     "test": "ava",
     "compile": "babel src -d lib --watch",
