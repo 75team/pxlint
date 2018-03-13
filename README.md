@@ -8,24 +8,16 @@
 module.exports = {
   host: "127.0.0.1",
   port: "8360",
-  route: [
+  tests: [
     {
       path: "/index",
-      design: [{
-        viewport: [800, 600],
-        image: './index.800x600.png',
-      }, {
-        viewport: [1920, 1280],
-        image: './index.1920x1280.png',
-      }]
+      viewport: [800, 600],
+      design: './index.800x600.png',
     },
     {
       path: "/user",
-      design: [{
-        delay: 5000,  // 5秒后再截图
-        viewport: [480, 800],
-        image: './user.480x800.png',
-      }]
+      viewport: [1920, 1080],
+      design: './user.1920x1080.png',
     }
   ]
 }
