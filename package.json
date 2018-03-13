@@ -20,6 +20,9 @@
   },
   "homepage": "https://github.com/75team/pxlint#readme",
   "dependencies": {
+    "hamming-distance": "^1.0.0",
+    "imghash": "0.0.3",
+    "pixelmatch": "^4.0.2",
     "puppeteer": "^1.1.1"
   },
   "devDependencies": {
