@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "description": "检查页面效果与设计稿是否相符合",
   "main": "lib/index.js",
-  "bin" : { 
-    "pxlint" : "bin/cli.js"
+  "bin": {
+    "pxlint": "bin/cli.js"
   },
   "scripts": {
     "test": "ava",
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/75team/pxlint#readme",
   "dependencies": {
+    "colors": "^1.2.1",
     "hamming-distance": "^1.0.0",
     "imghash": "0.0.3",
     "pixelmatch": "^4.0.2",
