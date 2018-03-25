@@ -25,7 +25,7 @@
   "dependencies": {
     "colors": "^1.2.1",
     "hamming-distance": "^1.0.0",
-    "imghash": "0.0.3",
+    "imghash": "^0.0.3",
     "pixelmatch": "^4.0.2",
     "puppeteer": "^1.1.1"
   },
@@ -36,6 +36,7 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
     "eslint": "^4.18.1",
-    "eslint-config-75team": "^1.0.22"
+    "eslint-config-75team": "^1.0.22",
+    "pngjs": "^3.3.2"
   }
 }

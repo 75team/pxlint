@@ -1481,7 +1481,7 @@ image-type@^2.1.0:
     file-type "^3.0.0"
     meow "^3.3.0"
 
-imghash@0.0.3:
+imghash@^0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/imghash/-/imghash-0.0.3.tgz#e4c33949e4f6990684194bd3a7ef89acb887e5d5"
   dependencies:
@@ -2076,7 +2076,7 @@ png-js@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/png-js/-/png-js-0.1.1.tgz#1cc7c212303acabe74263ec3ac78009580242d93"
 
-pngjs@^3.0.0:
+pngjs@^3.0.0, pngjs@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-3.3.2.tgz#097c3c2a75feb223eadddea6bc9f0050cf830bc3"
 
