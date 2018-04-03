@@ -23,6 +23,15 @@ module.exports = {
   need_diff_image: true, // 是否需要diff图， 默认为true
 }
 ```
+## 使用方法
+
+### nodejs 
+```javascript
+  import pxlint from 'pxlint'
+  pxlint('http://study.qiyun.360.cn').then((result) => {
+    console.log(result)
+  })
+``` 
 
 ## 输出
 ```
