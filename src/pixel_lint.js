@@ -28,7 +28,7 @@ function readFile(img) {
  * @param {*} img_design 
  * @param {*} test 
  */
-function getDiffImage (img_online, img_design, test, need_diff_image) {
+function getDiffImage (img_online, img_design, test, path, need_diff_image) {
   return new Promise((res, rej) => {
     const PNG = pngjs.PNG
     const img_online_png = fs.createReadStream(img_online).pipe(new PNG()).on('parsed', doneReading)
@@ -39,7 +39,7 @@ function getDiffImage (img_online, img_design, test, need_diff_image) {
       var diff = new PNG({width: img_online_png.width, height: img_online_png.height});
       const result = pixelmatch(img_online_png.data, img_design_png.data, diff.data, img_online_png.width, img_online_png.height, {threshold: 0.5});
       if(need_diff_image) {
-        diff.pack().pipe(fs.createWriteStream(`${test.path}/${test.viewport[0]}x${test.viewport[1]}.diff.png`))
+        diff.pack().pipe(fs.createWriteStream(`${path}/${test.viewport[0]}x${test.viewport[1]}.diff.png`))
       }
       res(result / (img_online_png.width * img_online_png.height))
     }
@@ -64,18 +64,29 @@ async function isImageSimilar(img_online, img_design) {
 }
 
 
-export default async (url, tests, configs = {}) => {
+export default async (url, configs) => {
   const opts = Object.assign({}, defaultConfigs, configs)
-  return Promise.all(tests.map(async(test) => {
+  console.log(opts)
+  let origin = ''
+  if(opts.host) {
+    origin += `://${opts.host}`
+  }
+  if(opts.port) {
+    origin += `:${opts.port}`
+  }
+  if(opts.tests.length === 0){
+    throw new Error('empty test Info')
+  }
+  return Promise.all(opts.tests.map(async(test) => {
     const result= {}
-    const img_online = await screen.screenshot(url, test.viewport, test.path)
+    const img_online = await screen.screenshot(url, test.viewport, opts.path)
     const img_design = test.design
-    const score = await getDiffImage(img_online, img_design, test, opts.need_diff_image)
-    const isSimilar = await isImageSimilar(img_online, img_design)
+    const score = await getDiffImage(img_online, img_design, test, opts.path, opts.need_diff_image)
+    result.isSimilar = await isImageSimilar(img_online, img_design)
     if(opts.need_score) {
       result.score = score
     }
-    return {score, isSimilar}
+    return result
   }))
 }
 

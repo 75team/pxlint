@@ -7,6 +7,11 @@ import report from './color_log.js'
  */
 export default {
   screenshot: async (url, viewport, path) => {
+    // 要求viewport必须为长度2的数组，数组元素必须为数字
+    if(!(viewport instanceof Array && viewport.length === 2 && typeof viewport[0] === 'number' && typeof viewport[1] === 'number')) {
+      throw new Error('[format] viewport need [number, number]')
+      return
+    }
     // validate params
   
     const browser = await puppeteer.launch()
