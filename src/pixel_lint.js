@@ -1,11 +1,12 @@
 import fs from 'fs'
+import path from 'path'
 import pngjs from 'pngjs'
 import pixelmatch from 'pixelmatch'
 import imghash from 'imghash'
 import hamming from 'hamming-distance'
 
-import report from './color_log.js'
 import screen from './screen.js'
+
 
 
 const defaultConfigs = {
@@ -64,9 +65,27 @@ async function isImageSimilar(img_online, img_design) {
 }
 
 
+function findConfig() {
+  let dir = __dirname;
+  // Mac/Linux only
+  while(dir !== '/') {
+    try {
+      return require(path.join(dir, 'pxlintrc.js'));
+    } catch(e) {
+      dir = path.join(dir, '../');
+    }
+  }
+  throw new Error('no config!');
+}
+
 export default async (url, configs) => {
-  const opts = Object.assign({}, defaultConfigs, configs)
-  console.log(opts)
+  let opts
+  if(configs === undefined) {
+    opts = Object.assign({}, defaultConfigs, findConfig())
+  } else {
+    opts = Object.assign({}, defaultConfigs, configs)
+  }
+  
   let origin = ''
   if(opts.host) {
     origin += `://${opts.host}`

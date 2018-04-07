@@ -1,5 +1,4 @@
 import puppeteer from 'puppeteer';
-import report from './color_log.js'
 /**
  * 
  * @param {待截图的URL} url 

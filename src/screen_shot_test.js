@@ -1,5 +1,4 @@
 import pxlint from './pixel_lint.js'
-import report from './color_log.js'
 import path from 'path'
 
 
