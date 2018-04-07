@@ -70,7 +70,7 @@ function findConfig() {
   // Mac/Linux only
   while(dir !== '/') {
     try {
-      return require(path.join(dir, 'pxlintrc.js'));
+      return require(path.join(dir, '.pxlintrc.js'));
     } catch(e) {
       dir = path.join(dir, '../');
     }
