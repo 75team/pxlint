@@ -28,6 +28,6 @@ exclude_patterns:
 - "**/tests/"
 - "**/vendor/"
 - "**/*.d.ts"
-- "**/.eslintrc.js"
+- "**/\.*.js"
 - "**/webpack.config.js"
 
