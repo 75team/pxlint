@@ -1,5 +1,6 @@
 import fs from 'fs'
-import path from 'path'
+import request from 'request'
+
 import pngjs from 'pngjs'
 import pixelmatch from 'pixelmatch'
 import imghash from 'imghash'
@@ -7,51 +8,77 @@ import hamming from 'hamming-distance'
 
 import screen from './screen.js'
 
-
-
 const defaultConfigs = {
   need_diff_image: true,
   need_score: true,
 }
 
-function readFile(img) {
-  return new Promise((res, rej) => {
-    fs.readFile(img, (err, data) => {
-      if (err) rej(err)
-      res(data)
-    })
-  })
+/**
+ * 判断是否是静床图片
+ * @param {*} imgPath
+ */
+function isQhimg(imgPath) {
+  const reg = /qhimg.com/g
+  return reg.test(imgPath)
+}
+
+/**
+ * 根据地址，读取文件流
+ * @param {*} imgPath
+ */
+function readFile(imgPath) {
+  const isQhimgUrl = isQhimg(imgPath)
+  // 如果是静床文件，使用request请求
+  if(isQhimgUrl) {
+    return request(imgPath)
+  }
+  return fs.createReadStream(imgPath)
 }
 
 /**
  * output diffImage and score the similarity
- * @param {*} img_online 
- * @param {*} img_design 
- * @param {*} test 
+ * @param {*} img_online 线上图片path
+ * @param {*} img_design 设计稿path
+ * @param {*} test
  */
-function getDiffImage (img_online, img_design, test, path, need_diff_image) {
+function diffAndScoreImage(img_online, img_design, test, path, need_diff_image) {
   return new Promise((res, rej) => {
     const PNG = pngjs.PNG
-    const img_online_png = fs.createReadStream(img_online).pipe(new PNG()).on('parsed', doneReading)
-    const img_design_png = fs.createReadStream(img_design).pipe(new PNG()).on('parsed', doneReading)
+    const img_online_png = readFile(img_online)
+      .pipe(new PNG())
+      .on('parsed', doneReading)
+    const img_design_png = readFile(img_design)
+      .pipe(new PNG())
+      .on('parsed', doneReading)
     let filesRead = 0
-    function doneReading () {
-      if (++filesRead < 2) return;
-      var diff = new PNG({width: img_online_png.width, height: img_online_png.height});
-      const result = pixelmatch(img_online_png.data, img_design_png.data, diff.data, img_online_png.width, img_online_png.height, {threshold: 0.5});
+    function doneReading() {
+      if(++filesRead < 2) return
+      const diff = new PNG({
+        width: img_online_png.width,
+        height: img_online_png.height,
+      })
+      const result = pixelmatch(
+        img_online_png.data,
+        img_design_png.data,
+        diff.data,
+        img_online_png.width,
+        img_online_png.height,
+        {threshold: 0.5}
+      )
       if(need_diff_image) {
-        diff.pack().pipe(fs.createWriteStream(`${path}/${test.viewport[0]}x${test.viewport[1]}.diff.png`))
+        diff
+          .pack()
+          .pipe(fs.createWriteStream(`${path}/${test.viewport[0]}x${test.viewport[1]}.diff.png`))
       }
       res(result / (img_online_png.width * img_online_png.height))
     }
   })
-
 }
 
 /**
  * use dhash and hamming distance to judge if one image is similar to another
- * @param {*} img_online 
- * @param {*} img_design 
+ * @param {*} img_online
+ * @param {*} img_design
  */
 async function isImageSimilar(img_online, img_design) {
   const img_online_hash = imghash.hash(img_online, 8, 'binary')
@@ -64,28 +91,27 @@ async function isImageSimilar(img_online, img_design) {
   return false
 }
 
-
 function findConfig() {
-  let dir = __dirname;
+  let dir = __dirname
   // Mac/Linux only
   while(dir !== '/') {
     try {
-      return require(path.join(dir, '.pxlintrc.js'));
-    } catch(e) {
-      dir = path.join(dir, '../');
+      return require(path.join(dir, '.pxlintrc.js'))
+    } catch (e) {
+      dir = path.join(dir, '../')
     }
   }
-  throw new Error('no config!');
+  throw new Error('no config!')
 }
 
-export default async (url, configs) => {
+export default (url, configs) => {
   let opts
   if(configs === undefined) {
     opts = Object.assign({}, defaultConfigs, findConfig())
   } else {
     opts = Object.assign({}, defaultConfigs, configs)
   }
-  
+
   let origin = ''
   if(opts.host) {
     origin += `://${opts.host}`
@@ -93,20 +119,24 @@ export default async (url, configs) => {
   if(opts.port) {
     origin += `:${opts.port}`
   }
-  if(opts.tests.length === 0){
+  if(opts.tests.length === 0) {
     throw new Error('empty test Info')
   }
-  return Promise.all(opts.tests.map(async(test) => {
-    const result= {}
+  return Promise.all(opts.tests.map(async (test) => {
+    const result = {}
     const img_online = await screen.screenshot(url, test.viewport, opts.path)
     const img_design = test.design
-    const score = await getDiffImage(img_online, img_design, test, opts.path, opts.need_diff_image)
-    result.isSimilar = await isImageSimilar(img_online, img_design)
+    const score = await diffAndScoreImage(
+      img_online,
+      img_design,
+      test,
+      opts.path,
+      opts.need_diff_image
+    )
+    // result.isSimilar = await isImageSimilar(img_online, img_design)
     if(opts.need_score) {
       result.score = score
     }
     return result
   }))
 }
-
-

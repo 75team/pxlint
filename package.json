@@ -27,7 +27,8 @@
     "hamming-distance": "^1.0.0",
     "imghash": "^0.0.3",
     "pixelmatch": "^4.0.2",
-    "puppeteer": "^1.1.1"
+    "puppeteer": "^1.1.1",
+    "request": "^2.85.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -37,6 +38,9 @@
     "babel-preset-env": "^1.6.1",
     "eslint": "^4.18.1",
     "eslint-config-75team": "^1.0.22",
+    "eslint-plugin-html": "^4.0.2",
+    "eslint-plugin-import": "^2.10.0",
+    "eslint-plugin-vue": "^4.4.0",
     "pngjs": "^3.3.2"
   }
 }
