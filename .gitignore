@@ -49,3 +49,5 @@ esconfig.json
 
 temp/*.js
 .jedi-tests
+
+temp_output

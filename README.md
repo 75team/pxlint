@@ -6,21 +6,12 @@
 
 ```js
 module.exports = {
-  host: "", // 服务器host 可为空
-  port: "", // 端口号 可为空
-  tests: [
-    {
-      viewport: [800, 600], // 视口大小 
-      design: './index.800x600.png', // 设计稿的路径
-    },
-    {
-      viewport: [1920, 1080],
-      design: './user.1920x1080.png',
-    }
-  ],
-  path: './test', // 最终diff图存储的路径
-  need_score: true, // 是否需要为匹配程度打分，默认为true
-  need_diff_image: true, // 是否需要diff图， 默认为true
+  protocol: 'http', // 协议，默认http
+  host: '', // 主机名，必填
+  port: '', // 端口号
+  output_diff_image: true, // 是否输出差异图片，默认true
+  output_score: true, // 是否输出分数，默认false
+  temp_output_dir: path.resolve(__dirname, '../temp_output'), // 默认临时文件输出目录
 }
 ```
 ## 使用方法
@@ -29,8 +20,31 @@ module.exports = {
 1. 使用pxlintrc.js进行项目配置时
 
 ```javascript
-  import pxlint from 'pxlint'
-  pxlint('http://study.qiyun.360.cn').then((result) => {
+  import PxLint from 'pxlint'
+  // 默认会使用 .pxlintrc.js中的配置
+  const pxlint = new PxLint()
+  pxlint.run([
+    {
+      path: '/', // 测试网页url，不包括origin 
+      viewport: [800, 600], // 视口大小
+      design: 'design.png', // 设计稿的路径，可为本地路径、url
+    },
+    // 更多lint内容...
+  ]).then((result) => {
+    /* 
+      result 数据接口
+      [
+        { 
+          path: '/',
+          viewport: [ 800, 600 ],
+          design: 'design.png',
+          score: 0.39450209490402416,
+          diff: 'diff.png',
+          similar: false 
+        },
+        ...
+      ]
+    */
     // do something
   })
 ``` 
@@ -38,40 +52,43 @@ module.exports = {
 2. 在js中书写配置时
 
 ```javascript
-  import pxlint from 'pxlint'
+  import PxLint from 'pxlint'
 
   const config =  {
-    host: "", // 服务器host 可为空
-    port: "", // 端口号 可为空
-    tests: [
-      {
-        viewport: [800, 600], // 视口大小 
-        design: './index.800x600.png', // 设计稿的路径
-      },
-      {
-        viewport: [1920, 1080],
-        design: './user.1920x1080.png',
-      }
-    ],
-    path: './test', // 最终diff图存储的路径
-    need_score: true, // 是否需要为匹配程度打分，默认为true
-    need_diff_image: true, // 是否需要diff图， 默认为true
+    protocol: 'http', // 协议，默认http
+    host: '', // 主机名，必填
+    port: '', // 端口号
+    output_diff_image: true, // 是否输出差异图片，默认true
+    output_score: true, // 是否输出分数，默认false
+    temp_output_dir: path.resolve(__dirname, '../temp_output'), // 默认临时文件输出目录
   }
+  
+  // 传入config
+  const pxlint = new PxLint(config)
 
-  pxlint('http://study.qiyun.360.cn', config).then((result) => {
-    console.log(result)
-  })
+  pxlint.run([
+      {
+        path: '/', // 测试网页url，不包括origin 
+        viewport: [800, 600], // 视口大小
+        design: 'design.png', // 设计稿的路径，可为本地路径、url
+      },
+      // 更多lint内容...
+    ]).then((result) => {
+      // do something
+    })
 ```
 
 ## 输出
 ```
 [
-  {
-    isSimilar: true, // 两张图片是否相似,
-    score: 0.2, // 匹配分数， 数值为0-1的小数
+  { 
+    path: '/',
+    viewport: [ 800, 600 ],
+    design: 'design.png',
+    score: 0.39450209490402416,
+    diff: 'diff.png',
+    similar: false 
   },
-  {
-    ...
-  }
+  ...
 ]
 ```

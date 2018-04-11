@@ -2,7 +2,7 @@
   "name": "pxlint",
   "version": "0.1.0",
   "description": "检查页面效果与设计稿是否相符合",
-  "main": "lib/index.js",
+  "main": "lib/pxlint.js",
   "bin": {
     "pxlint": "bin/cli.js"
   },
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/75team/pxlint#readme",
   "dependencies": {
+    "blueimp-md5": "^2.10.0",
     "colors": "^1.2.1",
     "hamming-distance": "^1.0.0",
     "imghash": "^0.0.3",
@@ -34,6 +35,7 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.2",
+    "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
     "eslint": "^4.18.1",
