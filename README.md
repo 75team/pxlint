@@ -10,7 +10,7 @@ module.exports = {
   host: '', // 主机名，必填
   port: '', // 端口号
   output_diff_image: true, // 是否输出差异图片，默认true
-  output_score: true, // 是否输出分数，默认false
+  output_score: true, // 是否输出分数，默认true
   temp_output_dir: path.resolve(__dirname, '../temp_output'), // 默认临时文件输出目录
 }
 ```
@@ -23,6 +23,8 @@ module.exports = {
   import PxLint from 'pxlint'
   // 默认会使用 .pxlintrc.js中的配置
   const pxlint = new PxLint()
+
+  // 执行检测
   pxlint.run([
     {
       path: '/', // 测试网页url，不包括origin 
@@ -59,7 +61,7 @@ module.exports = {
     host: '', // 主机名，必填
     port: '', // 端口号
     output_diff_image: true, // 是否输出差异图片，默认true
-    output_score: true, // 是否输出分数，默认false
+    output_score: true, // 是否输出分数，默认true
     temp_output_dir: path.resolve(__dirname, '../temp_output'), // 默认临时文件输出目录
   }
   
