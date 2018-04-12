@@ -69,7 +69,7 @@ export default class Pixlint {
           diff.data,
           img_online_png.width,
           img_online_png.height,
-          {threshold: 0.5}
+          {threshold: 0.1}
         )
         ret.score = 1 - result / (img_online_png.width * img_online_png.height)
         if(output_diff_image) {
