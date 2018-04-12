@@ -71,6 +71,7 @@ export default class Pixlint {
           img_online_png.height,
           {threshold: 0.5}
         )
+        ret.score = 1 - result / (img_online_png.width * img_online_png.height)
         if(output_diff_image) {
           const diffPath = `${temp_output_dir}/${tempHashPath}_${lintItem.viewport[0]}x${
             lintItem.viewport[1]
@@ -80,7 +81,6 @@ export default class Pixlint {
             .pipe(fs.createWriteStream(diffPath))
           ret.diff = diffPath
         }
-        ret.score = result / (img_online_png.width * img_online_png.height)
         res(ret)
       }
     })
